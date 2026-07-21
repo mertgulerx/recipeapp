@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -27,7 +28,7 @@ fun CardSlider() {
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
         items(foodNames) {
             foodName -> FoodCard(
@@ -48,8 +49,10 @@ fun FoodCard(
     Card(
         onClick = onClick,
         modifier = Modifier
-            .width(180.dp)
-            .height(120.dp),
+            .width(220.dp)
+            .height(220.dp),
+
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )
