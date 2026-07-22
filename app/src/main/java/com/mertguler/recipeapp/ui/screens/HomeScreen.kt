@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,10 +25,12 @@ import com.mertguler.recipeapp.ui.components.cardGrid
 
 @Composable
 fun HomeScreen(
+    onMealClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val gridState = rememberLazyGridState()
 
     Box(
         modifier = modifier
@@ -50,14 +53,16 @@ fun HomeScreen(
                         vertical = 16.dp
                     ),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    state = gridState
+                    ) {
                     item(
                         span = { GridItemSpan(maxLineSpan) }
                     ) {
                         CardSlider(
                             title = "Günün Yemekleri",
-                            meals = state.meals
+                            meals = state.meals,
+                            onMealClick = onMealClick
                         )
                     }
 

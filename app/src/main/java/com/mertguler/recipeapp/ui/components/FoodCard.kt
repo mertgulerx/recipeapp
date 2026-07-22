@@ -38,6 +38,7 @@ import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 fun CardSlider(
     title: String,
     meals: List<MealDto>,
+    onMealClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -62,7 +63,7 @@ fun CardSlider(
                 title = meal.strMeal,
                 imageUrl = meal.strMealThumb,
                 onClick = {
-                    println("${meal.strMeal} selected")
+                    onMealClick(meal.idMeal)
                 }
             )
             }

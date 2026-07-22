@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mertguler.recipeapp.ui.components.AppHeader
+import com.mertguler.recipeapp.ui.navigation.AppNavigation
 
 @Composable
 fun RecipeApp(){
@@ -14,13 +15,18 @@ fun RecipeApp(){
         topBar = {
             AppHeader()
         }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            HomeScreen()
+    ) // { innerPadding ->
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(innerPadding)
+//        ) {
+//            HomeScreen()
+//        }
+//    }
+        { innerPadding ->
+            AppNavigation(
+                modifier = Modifier.padding(innerPadding)
+            )
         }
-    }
 }
