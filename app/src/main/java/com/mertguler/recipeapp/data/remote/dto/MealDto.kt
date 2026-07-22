@@ -6,3 +6,9 @@ data class MealDto(
     val strMealThumb: String?, // Gorsel URL
     val strCategory: String? // Kategori
 )
+
+data class CategoryDto(
+    val idCategory: String,
+    val strCategory: String, // baslik
+    val strCategoryThumb: String? // Gorsel URL
+)

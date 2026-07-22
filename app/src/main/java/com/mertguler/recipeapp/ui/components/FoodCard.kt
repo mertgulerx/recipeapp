@@ -10,6 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -27,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mertguler.recipeapp.data.remote.dto.MealDto
 import coil3.compose.AsyncImage
+import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 
 @Composable
 fun CardSlider(
@@ -37,17 +43,16 @@ fun CardSlider(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = title,
-            modifier = Modifier.padding(horizontal = 12.dp),
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
         )
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(horizontal = 12.dp)
+//            contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
             items(
                 items = meals,
@@ -62,6 +67,33 @@ fun CardSlider(
             )
             }
         }
+    }
+}
+
+fun LazyGridScope.cardGrid(
+    title: String,
+    categories: List<CategoryDto>
+) {
+    item(
+        span = { GridItemSpan(maxLineSpan) }
+    ) {
+        Text(
+            text = title,
+            fontSize = 20.sp
+        )
+    }
+
+    items(
+        items = categories,
+        key = { category -> category.idCategory }
+    ) { category ->
+        FoodCard(
+            title = category.strCategory,
+            imageUrl = category.strCategoryThumb,
+            onClick = {
+                println("${category.strCategory} selected")
+            }
+        )
     }
 }
 

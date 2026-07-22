@@ -5,16 +5,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mertguler.recipeapp.data.local.dao.DailyMealDao
+import com.mertguler.recipeapp.data.local.entity.CategoryEntity
 import com.mertguler.recipeapp.data.local.entity.DailyMealEntity
 
 @Database(
-    entities = [DailyMealEntity::class],
-    version = 1,
+    entities = [DailyMealEntity::class,
+        CategoryEntity::class],
+    version = 2,
     exportSchema = false
 )
 abstract class RecipeDatabase : RoomDatabase() {
     abstract fun dailyMealDao(): DailyMealDao
-
     companion object {
 
         @Volatile

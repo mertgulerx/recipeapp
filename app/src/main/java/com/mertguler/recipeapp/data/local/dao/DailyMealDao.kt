@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.mertguler.recipeapp.data.local.entity.CategoryEntity
 import com.mertguler.recipeapp.data.local.entity.DailyMealEntity
 
 @Dao
@@ -32,6 +33,17 @@ interface DailyMealDao{
         deleteAllMeals()
         insertMeals(meals)
     }
+
+    @Query(
+        "SELECT * FROM categories"
+    )
+    suspend fun getAllCategories(): List<CategoryEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCategories(categories: List<CategoryEntity>)
+
+    @Query("DELETE FROM categories WHERE idCategory = :idCategory")
+    suspend fun deleteCategory(idCategory: String)
 
 
 }

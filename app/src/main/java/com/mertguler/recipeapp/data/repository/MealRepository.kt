@@ -1,10 +1,12 @@
 package com.mertguler.recipeapp.data.repository
 
 import com.mertguler.recipeapp.data.local.dao.DailyMealDao
+import com.mertguler.recipeapp.data.mapper.toCategoryEntity
 import com.mertguler.recipeapp.data.mapper.toDailyMealEntity
 import com.mertguler.recipeapp.data.mapper.toMealDto
 import com.mertguler.recipeapp.data.remote.MealApiService
 import com.mertguler.recipeapp.data.remote.RetrofitInstance
+import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 import com.mertguler.recipeapp.data.remote.dto.MealDto
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -73,6 +75,22 @@ class MealRepository(
         }
 
         return remoteMeals
+    }
+    suspend fun getCategories(): List<CategoryDto> {
+        var remoteCategories = apiService.getCategories().categories
+        if (remoteCategories.isNullOrEmpty()){
+            throw IllegalStateException("Tarifler Alinamadi")
+        }
+
+        remoteCategories = remoteCategories.sortedBy { it.strCategory }
+
+        val categoryEntities = remoteCategories.map { category ->
+            category.toCategoryEntity()
+        }
+
+        dailyMealDao.insertCategories(categoryEntities)
+
+        return remoteCategories
     }
 
     private fun getTodayKey(): String {
