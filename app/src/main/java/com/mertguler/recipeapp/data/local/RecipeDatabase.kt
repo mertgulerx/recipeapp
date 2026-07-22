@@ -11,7 +11,7 @@ import com.mertguler.recipeapp.data.local.entity.DailyMealEntity
 @Database(
     entities = [DailyMealEntity::class,
         CategoryEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class RecipeDatabase : RoomDatabase() {
@@ -28,6 +28,7 @@ abstract class RecipeDatabase : RoomDatabase() {
                     RecipeDatabase::class.java,
                     "recipe_database"
                 )
+                    .fallbackToDestructiveMigration(true)
                     .build()
                     .also { database ->
                         INSTANCE = database

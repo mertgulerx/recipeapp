@@ -6,16 +6,13 @@ import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 import com.mertguler.recipeapp.data.remote.dto.MealDto
 
 fun MealDto.toDailyMealEntity(
-    dayKey: String,
     displayOrder: Int
 ): DailyMealEntity {
     return DailyMealEntity(
         idMeal = idMeal,
         title = strMeal,
         imageUrl = strMealThumb,
-        category = strCategory,
-        dayKey = dayKey,
-        displayOrder = displayOrder
+        category = strCategory
     )
 }
 

@@ -3,6 +3,9 @@ package com.mertguler.recipeapp.data.repository
 import com.mertguler.recipeapp.data.local.dao.DailyMealDao
 import com.mertguler.recipeapp.data.local.preferences.AppPreferences
 import com.mertguler.recipeapp.data.local.preferences.AppPreferences.getLastCategoryCheckDate
+import com.mertguler.recipeapp.data.local.preferences.AppPreferences.getLastDailyMealCheckDate
+import com.mertguler.recipeapp.data.local.preferences.AppPreferences.setLastCategoryCheckDate
+import com.mertguler.recipeapp.data.local.preferences.AppPreferences.setLastDailyMealCheckDate
 import com.mertguler.recipeapp.data.mapper.toCategoryDto
 import com.mertguler.recipeapp.data.mapper.toCategoryEntity
 import com.mertguler.recipeapp.data.mapper.toDailyMealEntity
@@ -13,6 +16,7 @@ import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 import com.mertguler.recipeapp.data.remote.dto.MealDto
 import com.mertguler.recipeapp.utils.getTodayDate
 import com.mertguler.recipeapp.utils.getTodayDateString
+import java.time.LocalDateTime
 
 class MealRepository(
     private val dailyMealDao: DailyMealDao,
@@ -45,10 +49,9 @@ class MealRepository(
     suspend fun getDailyMeals(
         count: Int
     ): List<MealDto> {
-        val today = getTodayDateString()
         val cachedMeals = dailyMealDao.getAllMails()
 
-        if (cachedMeals.firstOrNull()?.dayKey == today){
+        if (getLastDailyMealCheckDate().plusHours(12).isAfter(LocalDateTime.now())){
             return cachedMeals.map {
                 entity -> entity.toMealDto()
             }
@@ -66,7 +69,6 @@ class MealRepository(
 
         val newEntities = remoteMeals.mapIndexed { index, meal ->
             meal.toDailyMealEntity(
-                dayKey = today,
                 displayOrder = index
             )
         }
@@ -77,13 +79,13 @@ class MealRepository(
             dailyMealDao.replaceMeals(newEntities)
         }
 
+        setLastDailyMealCheckDate(LocalDateTime.now())
+
         return remoteMeals
     }
     suspend fun getCategories(): List<CategoryDto> {
-        if (getLastCategoryCheckDate() != null){
-            if (getTodayDate().minusHours(12) < getLastCategoryCheckDate()){
-                return dailyMealDao.getAllCategories().map { e -> e.toCategoryDto() }
-            }
+        if (getLastCategoryCheckDate().plusHours(12).isAfter(LocalDateTime.now())){
+            return dailyMealDao.getAllCategories().map { e -> e.toCategoryDto() }
         }
 
         var remoteCategories = apiService.getCategories().categories
@@ -98,6 +100,7 @@ class MealRepository(
         }
 
         dailyMealDao.insertCategories(categoryEntities)
+        setLastCategoryCheckDate(LocalDateTime.now())
 
         return remoteCategories
     }

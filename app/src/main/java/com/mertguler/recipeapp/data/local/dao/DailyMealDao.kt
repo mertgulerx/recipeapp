@@ -13,7 +13,6 @@ interface DailyMealDao{
     @Query(
         """
             SELECT * FROM daily_meals
-            ORDER BY displayOrder ASC
         """
     )
     suspend fun getAllMails() : List<DailyMealEntity>
