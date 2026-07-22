@@ -1,2 +1,37 @@
 package com.mertguler.recipeapp.data.local.dao
 
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import com.mertguler.recipeapp.data.local.entity.DailyMealEntity
+
+@Dao
+interface DailyMealDao{
+    @Query(
+        """
+            SELECT * FROM daily_meals
+            ORDER BY displayOrder ASC
+        """
+    )
+    suspend fun getAllMails() : List<DailyMealEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMeals(
+        meals: List<DailyMealEntity>
+    )
+
+    @Query("DELETE FROM daily_meals")
+    suspend fun deleteAllMeals()
+
+    @Transaction
+    suspend fun replaceMeals(
+        meals: List<DailyMealEntity>
+    ) {
+        deleteAllMeals()
+        insertMeals(meals)
+    }
+
+
+}
