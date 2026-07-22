@@ -1,6 +1,9 @@
 package com.mertguler.recipeapp.data.repository
 
 import com.mertguler.recipeapp.data.local.dao.DailyMealDao
+import com.mertguler.recipeapp.data.local.preferences.AppPreferences
+import com.mertguler.recipeapp.data.local.preferences.AppPreferences.getLastCategoryCheckDate
+import com.mertguler.recipeapp.data.mapper.toCategoryDto
 import com.mertguler.recipeapp.data.mapper.toCategoryEntity
 import com.mertguler.recipeapp.data.mapper.toDailyMealEntity
 import com.mertguler.recipeapp.data.mapper.toMealDto
@@ -8,15 +11,15 @@ import com.mertguler.recipeapp.data.remote.MealApiService
 import com.mertguler.recipeapp.data.remote.RetrofitInstance
 import com.mertguler.recipeapp.data.remote.dto.CategoryDto
 import com.mertguler.recipeapp.data.remote.dto.MealDto
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.mertguler.recipeapp.utils.getTodayDate
+import com.mertguler.recipeapp.utils.getTodayDateString
 
 class MealRepository(
     private val dailyMealDao: DailyMealDao,
     private val apiService: MealApiService =
         RetrofitInstance.apiService
 ) {
+
     suspend fun getRandomMeal(): MealDto? {
         val response = apiService.getRandomMeal()
 
@@ -42,7 +45,7 @@ class MealRepository(
     suspend fun getDailyMeals(
         count: Int
     ): List<MealDto> {
-        val today = getTodayKey()
+        val today = getTodayDateString()
         val cachedMeals = dailyMealDao.getAllMails()
 
         if (cachedMeals.firstOrNull()?.dayKey == today){
@@ -77,6 +80,12 @@ class MealRepository(
         return remoteMeals
     }
     suspend fun getCategories(): List<CategoryDto> {
+        if (getLastCategoryCheckDate() != null){
+            if (getTodayDate().minusHours(12) < getLastCategoryCheckDate()){
+                return dailyMealDao.getAllCategories().map { e -> e.toCategoryDto() }
+            }
+        }
+
         var remoteCategories = apiService.getCategories().categories
         if (remoteCategories.isNullOrEmpty()){
             throw IllegalStateException("Tarifler Alinamadi")
@@ -91,11 +100,5 @@ class MealRepository(
         dailyMealDao.insertCategories(categoryEntities)
 
         return remoteCategories
-    }
-
-    private fun getTodayKey(): String {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-
-        return formatter.format(Date())
     }
 }
