@@ -18,7 +18,7 @@ fun AppHeader() {
             expandedHeight = 63.dp, // Header dikey genisligi
             title = {
                 Text(
-                    text = "TarifSepeti",
+                    text = "RecipeBook",
                     style = MaterialTheme.typography.titleLarge
                 )
             },
