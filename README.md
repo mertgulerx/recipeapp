@@ -1,4 +1,4 @@
-# Android App Architecture Tutorial - Token
+# Android App Architecture Tutorial - Token Internship
 
 ## Stack
 
