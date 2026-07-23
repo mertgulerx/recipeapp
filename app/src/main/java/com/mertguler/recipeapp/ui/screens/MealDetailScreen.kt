@@ -25,9 +25,9 @@ fun MealDetailScreen(
         TextButton(
             onClick = onBackClick
         ) {
-            Text("Geri")
+            Text("Back")
         }
 
-        Text(text = "Tarif ID: $mealId")
+        Text(text = "Recipe ID: $mealId")
     }
 }

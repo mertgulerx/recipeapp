@@ -44,18 +44,18 @@ class HomeViewModel(
                 _uiState.value =
                     if (meals.isEmpty()) {
                         HomeUiState.Error(
-                            message = "Tarif Bulunamadi."
+                            message = "Recipes Not Found."
                         )
                     } else if (categories.isEmpty()){
                         HomeUiState.Error(
-                            message = "Kategori Bulunamadi."
+                            message = "Categories Not Found."
                         )
                     } else {
                         HomeUiState.HomeSuccess(meals = meals, categories = categories)
                     }
             } catch (exception: Exception) {
                 _uiState.value = HomeUiState.Error(
-                    message = exception.message ?: "Yukleme Hatasi."
+                    message = exception.message ?: "Loading Error."
                 )
             }
         }

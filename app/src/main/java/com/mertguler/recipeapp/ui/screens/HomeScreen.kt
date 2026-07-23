@@ -60,14 +60,14 @@ fun HomeScreen(
                         span = { GridItemSpan(maxLineSpan) }
                     ) {
                         CardSlider(
-                            title = "Günün Yemekleri",
+                            title = "Daily Meals",
                             meals = state.meals,
                             onMealClick = onMealClick
                         )
                     }
 
                     cardGrid(
-                        title = "Kategoriler",
+                        title = "Categories",
                         categories = state.categories
                     )
                 }
